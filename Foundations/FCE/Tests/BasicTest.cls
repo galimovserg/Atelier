@@ -5,6 +5,93 @@ Class FCE.Tests.BasicTest Extends FCE.Tests.TestCase
 	///holds an unreferenced FCE.RealEstate object, assigned in OnBeforeAllTests()
 	Property UnrefdRealEstate As FCE.RealEstate [Private];
 	
+	//Basic tests for FCE.Branch
+	Method TestBranch(){
+			// assertion 1
+
+			set branch = ##class(FCE.Branch).%New()
+				do $$$AssertTrue($isobject(branch),"Created New Branch")
+			
+			// assertion 2
+
+			set status = branch.%Save()
+			do $$$AssertStatusNotOK(status, "Phone is required")
+			
+			// assertion 3
+
+			set branch.Phone = "9999999999" // bad pattern
+
+			set status = branch.%Save()
+			do $$$AssertStatusNotOK(status, "Phone doesn't match pattern: ###-###-####")
+			
+			// assertion 4
+
+			set branch.Phone = "999-999-9999" // pre-existing number
+
+			set status = branch.%Save()
+			
+			do $$$AssertStatusNotOK(status, "Phone must be unique")
+			
+			// assertion 5
+
+			set branch.Phone = "999-999-0000"
+
+			set branch.Address = ..RefdRealEstate
+
+			set status = branch.%Save()
+
+			do $$$AssertStatusNotOK(status, "Another Branch already has this address")
+			
+			// assertion 6
+
+			set branch.Address = ..UnrefdRealEstate
+
+			set branch.Opens = 18000 // open at 5am
+
+			set status = branch.%Save()
+
+			do $$$AssertStatusNotOK(status, "Opening at 5am too early")
+			
+			// assertion 7
+
+			set branch.Opens = 28800 // open at 8am
+
+			set branch.Closes = 82800 // close at 11pm
+
+			set status = branch.%Save()
+			
+			do $$$AssertStatusNotOK(status, "Closing at 11pm too late")
+
+			// assertion 8
+
+			set branch.Closes = 64800 // close at 6pm
+
+			set branch.NationalCurrency = "ABC" // invalid currency
+
+			set status = branch.%Save()
+			
+			do $$$AssertStatusNotOK(status, "ABC is invalid currency")
+
+			// assertion 9
+
+			set branch.NationalCurrency = "USD" // valid currency
+
+			set status = branch.%Save()
+			
+			do $$$AssertStatusOK(status, "Branch saved")
+
+			// assertion 10
+
+			set branchID = branch.%Id()
+			
+			do $$$AssertNotEquals(branchID, "", "ID assigned")
+			
+			// assertion 11
+
+			set status = ##class(FCE.Branch).%DeleteId(branchID)
+
+			do $$$AssertStatusOK(status, "Branch deleted")
+	}
 	/// set up test environment
 	Method OnBeforeAllTests() As %Status
 	{

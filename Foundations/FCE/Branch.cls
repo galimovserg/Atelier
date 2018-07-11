@@ -24,6 +24,8 @@ Class FCE.Branch Extends (%Persistent,%Library.Populate,%XML.Adaptor)
 			set {DurationOpen} = $ztime({Closes} - {Opens})
 		}
 	}];
+	Property CurrencyBalances as array of %Numeric (MINVAL = 0, MAXVAL = 100000000,  POPSPEC = ":5:##class(FCE.Currency).Currency()")[SqlFieldname = Balance];
+	
 	/// create a JSON object from Branch properties
 Method CopyToObject(object as %DynamicObject) as %Status
 {
@@ -64,6 +66,11 @@ Storage Default
 <Value name="6">
 <Value>Closes</Value>
 </Value>
+</Data>
+<Data name="CurrencyBalances">
+<Attribute>CurrencyBalances</Attribute>
+<Structure>subnode</Structure>
+<Subscript>"CurrencyBalances"</Subscript>
 </Data>
 <DataLocation>^FCE.BranchD</DataLocation>
 <DefaultData>BranchDefaultData</DefaultData>

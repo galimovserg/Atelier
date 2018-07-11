@@ -1,12 +1,12 @@
 Class FCE.ATM Extends (%Persistent,%Library.Populate,%XML.Adaptor)
 {
-	Property SerialNumber As %String [Required];
+	Property SerialNumber As %String (POPSPEC = "##class(%PopulateUtils).String(5)_##class(%PopulateUtils).String(5)") [Required];
 	///Unique index on Serial Number ATM
-	Index SerialIndex on SerialNumber  [Unique];
+	Index SerialIndex on SerialNumber [Unique];
 	
 	Property Address As FCE.RealEstate;
 	ForeignKey RealEstateFK(Address) References FCE.RealEstate();
-	Property CurrencyBalances as array of %Numeric (MINVAL = 0, MAXVAL = 10000)[SqlFieldname = Balance];
+	Property CurrencyBalances as array of %Numeric (MINVAL = 0, MAXVAL = 10000,  POPSPEC = ":5:##class(FCE.Currency).Currency()")[SqlFieldname = Balance];
 	Index CBIndex on CurrencyBalances(KEYS);
 	
 	

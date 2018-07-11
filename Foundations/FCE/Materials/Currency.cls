@@ -15,6 +15,10 @@ Property USDExchangeRate As %Decimal(MINVAL = .001, SCALE = 3);
 
 Property Image As %Stream.GlobalBinary;
 
+///Generate currency name for use as collection key
+ClassMethod Currency() As  FCE.CurrencyName{
+	return ##class(%PopulateUtils).ValueList(..#ABBREVIATIONS)
+}
 ClassMethod ConvertCurrenciestoListString(valuelist as %String) as %List
 {
 	set delim = $extract(valuelist, 1)

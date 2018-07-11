@@ -7,8 +7,8 @@ Class FCE.Address Extends (%Persistent,%Library.Populate,%XML.Adaptor)[Abstract]
 	//Property Zip As %String(PATTERN="5n.1""-""4n",MAXLEN=10)[Required];
 	Property Zip As FCE.Regex(REGEX="\d{5}(-\d{4})?")[Required];
 	Method Print(){
-		write Street 
-		write !, City," ", State," ", Zip
+		write ..Street 
+		write !, ..City," ", ..State," ", ..Zip
 	}
 Storage Default
 {

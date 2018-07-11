@@ -15,6 +15,10 @@ Class FCE.Branch Extends (%Persistent,%Library.Populate,%XML.Adaptor)
 	Property Opens As %Time(MINVAL = "$ztimeh(""6:00am"")",MAXVAL="$ztimeh(""12:00n"")");
 	///Branch close between 1:00pm and 10:00pm
 	Property Closes As %Time(MINVAL = "$ztimeh(""1:00pm"")",MAXVAL="$ztimeh(""10:00pm"")");
+	
+	RelationShip ATMs As FCE.ATM [Cardinality = children, Inverse = Branch];
+	
+	
 	///calculate DurationOpen from Opens, Closes
 	Property DurationOpen As %String [Calculated, SqlComputed, SqlComputeCode = { 
 	if ({Closes} = "")||({Opens} = "") {

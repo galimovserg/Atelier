@@ -25,7 +25,10 @@ Class FCE.Branch Extends (%Persistent,%Library.Populate,%XML.Adaptor)
 		}
 	}];
 	Property CurrencyBalances as array of %Numeric (MINVAL = 0, MAXVAL = 100000000,  POPSPEC = ":5:##class(FCE.Currency).Currency()")[SqlFieldname = Balance];
-	
+
+	Method %OnValidateObject() As %Status [Private, ServerOnly = 1]	{
+		return ##class(FCE.Currency).CurrencyKeysValidate(..CurrencyBalances)
+	}
 	/// create a JSON object from Branch properties
 Method CopyToObject(object as %DynamicObject) as %Status
 {

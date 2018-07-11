@@ -9,6 +9,9 @@ Class FCE.ATM Extends (%Persistent,%Library.Populate,%XML.Adaptor)
 	Property CurrencyBalances as array of %Numeric (MINVAL = 0, MAXVAL = 10000,  POPSPEC = ":5:##class(FCE.Currency).Currency()")[SqlFieldname = Balance];
 	Index CBIndex on CurrencyBalances(KEYS);
 	
+	Method %OnValidateObject() As %Status [Private, ServerOnly = 1]	{
+		return ##class(FCE.Currency).CurrencyKeysValidate(..CurrencyBalances)
+	}
 	
 Storage Default
 {

@@ -14,7 +14,33 @@ Index CurrencyIndex On Currency [ Unique ];
 Property USDExchangeRate As %Decimal(MINVAL = .001, SCALE = 3);
 
 Property Image As %Stream.GlobalBinary;
+/// Used by %OnValidateObject() in <class>FCE.Branch</class> and <class>FCE.ATM</class>
 
+/// to validate the keys (currency abbreviations) for the CurrencyBalances array
+
+ClassMethod CurrencyKeysValidate(balancesArray as %Collection.ArrayOfDT) as %Status
+
+{
+
+	// call ConvertCurrenciestoListString() to convert currencies to $list format
+
+	set list = ..ConvertCurrenciestoListString(balancesArray)
+
+ 
+
+	// loop through keys until either reaching end or key is not in validKeys
+	set key=""
+	do{
+		do balancesArray.GetNext(.key)
+	} while ((key'="") && ($listfind(list, key)))
+
+
+
+	if (key = "") { return $$$OK }
+
+	else { return $$$ERROR("Invalid key" _ key) }
+
+}
 ///Generate currency name for use as collection key
 ClassMethod Currency() As  FCE.CurrencyName{
 	return ##class(%PopulateUtils).ValueList(..#ABBREVIATIONS)

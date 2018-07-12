@@ -8,7 +8,7 @@ Class FCE.ATM Extends (%Persistent,%Library.Populate,%XML.Adaptor)
 	ForeignKey RealEstateFK(Address) References FCE.RealEstate();
 	Property CurrencyBalances as array of %Numeric (MINVAL = 0, MAXVAL = 10000,  POPSPEC = ":5:##class(FCE.Currency).Currency()")[SqlFieldname = Balance];
 	Index CBIndex on CurrencyBalances(KEYS);
-	
+	property Note As %Stream.GlobalCharacter;
 	Relationship Branch As FCE.Branch [Cardinality = parent, Inverse = ATMs];
 	
 	/// Update ATM by debiting/crediting currencies<br>
@@ -192,6 +192,9 @@ Storage Default
 </Value>
 <Value name="3">
 <Value>Address</Value>
+</Value>
+<Value name="4">
+<Value>Note</Value>
 </Value>
 </Data>
 <Data name="CurrencyBalances">

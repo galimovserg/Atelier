@@ -1,4 +1,4 @@
-/// Created using the page template: Title Page
+/// Created using the page template: Title Page 
 Class FCE.Pages.CurrencyImage Extends %ZEN.Component.page
 {
 

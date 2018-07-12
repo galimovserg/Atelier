@@ -73,7 +73,7 @@ ClassMethod FetchRates(verbose As %Boolean = 0) As %Status
 
 	set request = ##class(%Net.HttpRequest).%New()
 	set request.Server="apilayer.net"
-	set accesskey = ""  // requires access key
+	set accesskey = "afc658592c828ae2ec7442005ec3f583"  // requires access key
 	set uri = "/api/live?access_key=" _ accesskey _
 	          "&currencies=" _ currencies _
 	          "&source=USD&format=1"
@@ -150,7 +150,7 @@ ClassMethod ImportImages(directory As %String)
 	
 		set file = ##class(%Stream.FileBinary).%New()
 		set file.Filename = directory _ currencyName _ ".jpg"
-		
+		zwrite directory
 		// does file exist?
 		if (file.Size = 0) {
 			write !, "Couldn't import ", file.Filename, !

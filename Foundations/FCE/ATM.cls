@@ -10,9 +10,27 @@ Class FCE.ATM Extends (%Persistent,%Library.Populate,%XML.Adaptor)
 	Index CBIndex on CurrencyBalances(KEYS);
 	
 	Relationship Branch As FCE.Branch [Cardinality = parent, Inverse = ATMs];
+	
 	Method fillRandom(){
 		set ..SerialNumber = ##class(%PopulateUtils).String(5)_##class(%PopulateUtils).String(5)
-		set ..Address = ##class(FCE.Address).%New(initvalue)
+		set ..Address = ##class(FCE.RealEstate).%New()
+		do ..Address.fillrandom()
+		set list = ##class(FCE.Currency).ConvertCurrenciestoListString(##class(FCE.CurrencyName).#VALUELIST)
+		
+		
+		
+		set key =  $list(list,1)
+		
+		for i=2:1:$listlength(list) 
+		{
+			if (key'="")
+			{
+			}else{
+				set value=random(10000)
+				do CurrencyBalances.SetAt(value,key)
+			}
+			set key =  $list(list,i)
+		}
 	}
 	
 	Method %OnValidateObject() As %Status [Private, ServerOnly = 1]	{

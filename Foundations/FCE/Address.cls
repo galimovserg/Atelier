@@ -6,18 +6,7 @@ Class FCE.Address Extends (%Persistent,%Library.Populate,%XML.Adaptor)[Abstract]
 	Property State As %String(MAXLEN=2,VALUELIST="-NY-NJ-MA-TX")[Required];
 	//Property Zip As %String(PATTERN="5n.1""-""4n",MAXLEN=10)[Required];
 	Property Zip As FCE.Regex(REGEX="\d{5}(-\d{4})?")[Required];
-	Method fillrandom(){
-		set dataStreet(1)="7197 Second Drive"
-		set dataStreet(2)=""
-		set dataStreet(3)=""
-		set dataStreet(4)=""
-		set dataStreet(5)=""
-		set dataStreet(6)=""
-		set dataStreet(7)=""
-		set dataStreet(8)=""
-		set dataStreet(9)=""
-		
-	}
+	
 	Method Print(){
 		write ..Street 
 		write !, ..City," ", ..State," ", ..Zip

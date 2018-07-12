@@ -24,9 +24,7 @@ ClassMethod CurrencyKeysValidate(balancesArray as %Collection.ArrayOfDT) as %Sta
 
 	// call ConvertCurrenciestoListString() to convert currencies to $list format
 
-	set list = ..ConvertCurrenciestoListString(balancesArray)
-
- 
+	set list = ..ConvertCurrenciestoListString(..#ABBREVIATIONS)
 
 	// loop through keys until either reaching end or key is not in validKeys
 	set key=""

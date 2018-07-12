@@ -23,15 +23,81 @@ Class FCE.Tests.BasicTest Extends FCE.Tests.TestCase
 
 		set ATM.Branch = branch  // must do this so that ATM is valid (Saveable) at this point
 
-		TODO #1
-
-		TODO #2
-
-		TODO #3
-
-		TODO #4
-
-		TODO #5
+		///TODO 1
+		
+		set status = ATM.Update("USD", 1000000, "EUR", 123)
+		
+		do $$$AssertStatusNotOK(status, $system.Status.GetErrorText(status))
+		
+		set lasteuros = ATM.CurrencyBalances.GetAt("EUR")
+		
+		set lastdollars = ATM.CurrencyBalances.GetAt("USD")
+		
+		do $$$AssertEquals(dollars, lastdollars)
+		
+		do $$$AssertEquals(euros, lasteuros)
+		
+		///TODO 2
+		
+		set status = ATM.Update("USD", 100, "EUR", 1237886)
+		
+		do $$$AssertStatusNotOK(status, $system.Status.GetErrorText(status))
+		
+		set lasteuros = ATM.CurrencyBalances.GetAt("EUR")
+		
+		set lastdollars = ATM.CurrencyBalances.GetAt("USD")
+		
+		do $$$AssertEquals(dollars, lastdollars)
+		
+		do $$$AssertEquals(euros, lasteuros)
+		
+		///TODO 3
+		
+		set status = ATM.Update("USD", 10, "EUR", 12)
+		
+		do $$$AssertStatusOK(status)
+		
+		set lasteuros = ATM.CurrencyBalances.GetAt("EUR")
+		
+		set lastdollars = ATM.CurrencyBalances.GetAt("USD")
+		
+		do $$$AssertEquals(dollars - 10, lastdollars)
+		
+		do $$$AssertEquals(euros + 12, lasteuros)
+		
+		///TODO 4
+		
+		set euros = lasteuros
+		set dollars = lastdollars
+		
+		set status = ATM.Update("USD", 10)
+		
+		do $$$AssertStatusOK(status)
+		
+		set lasteuros = ATM.CurrencyBalances.GetAt("EUR")
+		
+		set lastdollars = ATM.CurrencyBalances.GetAt("USD")
+		
+		do $$$AssertEquals(dollars - 10, lastdollars)
+		
+		do $$$AssertEquals(euros, lasteuros)
+		
+		///TODO 4
+		
+		set euros = lasteuros
+		set dollars = lastdollars
+		
+		set status = ATM.Update(, , "EUR", 15)
+		
+		do $$$AssertStatusOK(status)
+		
+		set lasteuros = ATM.CurrencyBalances.GetAt("EUR")
+		
+		set lastdollars = ATM.CurrencyBalances.GetAt("USD")
+		
+		do $$$AssertEquals(dollars , lastdollars)
+		
+		do $$$AssertEquals(euros +15, lasteuros)
 
 	}
 	

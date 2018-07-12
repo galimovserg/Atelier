@@ -51,7 +51,7 @@ Class FCE.ATM Extends (%Persistent,%Library.Populate,%XML.Adaptor)
 				
 				do ..CurrencyBalances.SetAt(localvalue, currencyOut)
 				
-				set status = ..%OnValidateObject()
+				set status = ..%ValidateObject()
 
 				if $$$ISERR(status) {
 
@@ -77,7 +77,7 @@ Class FCE.ATM Extends (%Persistent,%Library.Populate,%XML.Adaptor)
 				
 				do ..CurrencyBalances.SetAt(localvalue, currencyIn)
 				
-				set status = ..%OnValidateObject()
+				set status = ..%ValidateObject()
 
 				if $$$ISERR(status) {
 
@@ -103,7 +103,7 @@ Class FCE.ATM Extends (%Persistent,%Library.Populate,%XML.Adaptor)
 
 			if (ex.Code = $$$ERRORCODE($$$DTMinVal)) {
 
-				set status = $$$ERROR("Not enough stok in ATM for "_currecyOut_" SerialNumber = "_..SerialNumber)
+				set status = $$$ERROR($$$GeneralError, "Not enough stok in ATM for "_currencyOut_" SerialNumber = "_..SerialNumber)
 				set exCustom = ##class(%Exception.StatusException).CreateFromStatus(status)
 
 				do exCustom.Log()
@@ -112,7 +112,7 @@ Class FCE.ATM Extends (%Persistent,%Library.Populate,%XML.Adaptor)
 
 			elseif (ex.Code = $$$ERRORCODE($$$DTMaxVal)) {
 
-				set status = $$$ERROR("ATM has no more room for "_currecyOut_" SerialNumber = "_..SerialNumber)
+				set status = $$$ERROR($$$GeneralError, "ATM has no more room for "_currencyOut_" SerialNumber = "_..SerialNumber)
 
 				set exCustom = ##class(%Exception.StatusException).CreateFromStatus(status)
 

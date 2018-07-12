@@ -1,7 +1,7 @@
 Class FCE.Branch Extends (%Persistent,%Library.Populate,%XML.Adaptor)
 {
 	///Currency used by this branch's nation
-	Property NationalCurrentcy As FCE.CurrencyName [ InitialExpression = "USD"];
+	Property NationalCurrency As FCE.CurrencyName [ InitialExpression = "USD"];
 	///Branch phone
 	Property Phone as FCE.PhoneNumber [Required];
 	///Unique index on Branch phone
@@ -35,6 +35,7 @@ Class FCE.Branch Extends (%Persistent,%Library.Populate,%XML.Adaptor)
 		set stockAmountIn = ..CurrencyBalances.GetAt(currencyIn)		
 		set localvalue = stockAmountIn + amountIn		
 		do ..CurrencyBalances.SetAt(localvalue, currencyIn)
+		return $$$OK
 	}
 	Method %OnValidateObject() As %Status [Private, ServerOnly = 1]	{
 		return ##class(FCE.Currency).CurrencyKeysValidate(..CurrencyBalances)
@@ -65,7 +66,7 @@ Storage Default
 <Value>%%CLASSNAME</Value>
 </Value>
 <Value name="2">
-<Value>NationalCurrentcy</Value>
+<Value>NationalCurrency</Value>
 </Value>
 <Value name="3">
 <Value>Phone</Value>

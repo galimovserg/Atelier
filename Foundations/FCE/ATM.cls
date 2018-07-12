@@ -42,6 +42,26 @@ Class FCE.ATM Extends (%Persistent,%Library.Populate,%XML.Adaptor)
 		order by Address->State, Address->City
 
 	}
+	
+	ClassMethod CitiesStatesList() As %Status
+
+	{
+
+		// TODO #1
+		set resultSet = ##class(%ResultSet).%New("FCE.ATM:CitiesStates") 
+		set resultSet.RuntimeMode = 2
+		set status = resultSet.Execute()
+		while (resultSet.Next()'=0) {
+		 write resultSet.Data("City")
+		 write "  "
+		 write resultSet.Data("State")
+		 write !
+		}
+		do resultSet.Close()
+
+		return $$$OK
+
+	}
 	/// Update ATM by debiting/crediting currencies<br>
 
 	/// This method can be called with:<br>

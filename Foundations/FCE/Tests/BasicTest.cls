@@ -4,6 +4,63 @@ Class FCE.Tests.BasicTest Extends FCE.Tests.TestCase
 	property RefdRealEstate As FCE.RealEstate [Private];
 	///holds an unreferenced FCE.RealEstate object, assigned in OnBeforeAllTests()
 	Property UnrefdRealEstate As FCE.RealEstate [Private];
+	/// test FCE.ATM.Update()
+	Method TestUpdateATM()
+	{
+
+		// create branch and ATM
+
+		set branch = ##class(FCE.Branch).%New()
+
+		set ATM = ##class(FCE.ATM).%New()
+
+		set ATM.SerialNumber = "X1111Y2222"
+		set euros = 150, dollars = 50
+
+		do ATM.CurrencyBalances.SetAt(dollars,"USD")
+
+		do ATM.CurrencyBalances.SetAt(euros,"EUR")
+
+		set ATM.Branch = branch  // must do this so that ATM is valid (Saveable) at this point
+
+		TODO #1
+
+		TODO #2
+
+		TODO #3
+
+		TODO #4
+
+		TODO #5
+
+	}
+	
+	/// test FCE.Branch.Update()
+	Method TestUpdateBranch()
+	{
+
+		// create branch
+
+		set branch = ##class(FCE.Branch).%New()
+
+		set dollars = 50
+
+		do branch.CurrencyBalances.SetAt(dollars,"USD")
+
+		set currencyIn = "USD", amountIn = 100
+
+		set status = branch.Update(currencyIn, amountIn)
+
+		do $$$AssertStatusOK(status, "Branch updated")
+
+		set currentDollars = branch.CurrencyBalances.GetAt("USD")
+
+		set dollars = dollars + amountIn
+
+		do $$$AssertEquals(currentDollars, dollars, "Incoming currency updated")
+
+	}
+
 	
 	//Basic tests for FCE.Branch
 	Method TestBranch(){

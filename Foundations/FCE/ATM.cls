@@ -42,7 +42,25 @@ Class FCE.ATM Extends (%Persistent,%Library.Populate,%XML.Adaptor)
 		order by Address->State, Address->City
 
 	}
-	
+	ClassMethod CitiesStatesListScrollable() As %Status
+	{
+		#dim resultSet as %ScrollableResultSet
+		set resultSet = ##class(%ScrollableResultSet).%New("FCE.ATM:CitiesStates") 
+		set resultSet.RuntimeMode = 2
+		set status = resultSet.Execute()
+		set count = resultSet.Count()
+		//set end position
+		set resultSet.CurrRow = resultSet.Count()
+		for i=1:1:count {
+		 write resultSet.Data("City")
+		 write "  "
+		 write resultSet.Data("State")
+		 write !
+		 do resultSet.Previous()
+		}
+		do resultSet.Close()
+		
+	}
 	ClassMethod CitiesStatesList() As %Status
 
 	{

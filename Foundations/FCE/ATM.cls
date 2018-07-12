@@ -11,15 +11,46 @@ Class FCE.ATM Extends (%Persistent,%Library.Populate,%XML.Adaptor)
 	property Note As %Stream.GlobalCharacter;
 	Relationship Branch As FCE.Branch [Cardinality = parent, Inverse = ATMs];
 	
+	
+	///  Sum currency amounts and count ATMs, by currency
+
+	Query CurrencySummary(minimum = 0) As %SQLQuery [ SqlProc ]
+
+	{
+
+		select element_key as Currency, count(ATM) as ATM_Count, sum(Balance) as Total_Balance
+
+		from FCE.ATM_Balance
+
+		group by element_key
+
+		having sum(Balance) >= :minimum
+
+		order by element_key
+
+ 	}
+	/// Return unique list of city/state combinations with ATMs
+
+	Query CitiesStates() As %SQLQuery [ SqlProc ]
+
+	{
+
+		select distinct Address->City, Address->State
+
+		from FCE.ATM
+
+		order by Address->State, Address->City
+
+	}
 	/// Update ATM by debiting/crediting currencies<br>
 
-/// This method can be called with:<br>
+	/// This method can be called with:<br>
 
-/// * all 4 arguments (cash in – cash out). currencyOut and currencyIn <b>must</b> be different<br>
+	/// * all 4 arguments (cash in – cash out). currencyOut and currencyIn <b>must</b> be different<br>
 
-/// * the first 2 arguments (cash out only, paid for by credit card or bank account)<br>
+	/// * the first 2 arguments (cash out only, paid for by credit card or bank account)<br>
 
-/// * the last 2 arguments (cash in only, to be credited to bank balance)<br>
+	/// * the last 2 arguments (cash in only, to be credited to bank balance)<br>
 
 	Method Update(
 

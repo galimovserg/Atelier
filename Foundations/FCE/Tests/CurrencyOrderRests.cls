@@ -7,7 +7,7 @@ Class FCE.Tests.CurrencyOrderRests Extends FCE.Tests.TestCase
 
 		set branch = ##class(FCE.Branch).%New()
 
-		set phone = "949-727-3050", branch.Phone = phone
+		set phone = "949-997-3`50", branch.Phone = phone
 
 		set status = branch.%Save()
 
@@ -16,11 +16,7 @@ Class FCE.Tests.CurrencyOrderRests Extends FCE.Tests.TestCase
 		// create ATM and order
 
 		set ATM = ##class(FCE.ATM).%New()
-
-		do ATM.CurrencyBalances.SetAt(250, "EUR")
-
-		do ATM.CurrencyBalances.SetAt(50, "USD")
-		set ATM.SerialNumber = "Y9999V9290"
+		do ATM.fillRandom()
 		set order = ##class(FCE.CurrencyOrder).%New()
 		set order.CurrencyOut = "EUR"
 		set order.AmountOut = 95

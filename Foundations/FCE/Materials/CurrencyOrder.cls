@@ -28,7 +28,8 @@ Class FCE.CurrencyOrder Extends (%Persistent, %Populate, %XML.Adaptor)
 
 	Relationship ATM As FCE.ATM [Cardinality = one, Inverse = Orders];
 	Index ATMIndex on ATM;
-
+	Index CurrencyInIndex on CurrencyIn [TYPE = bitmap];
+	Index CurrencyOutIndex on CurrencyOut [TYPE = bitmap];
 	/// Requested: initial request<br>
 	/// Pending:   only if awaiting approval<br>
 	/// Rejected:  not approved by bank<br>
@@ -38,7 +39,8 @@ Class FCE.CurrencyOrder Extends (%Persistent, %Populate, %XML.Adaptor)
 	/// Canceled:  canceled by customer<br>
 
 	Property Status As %String (VALUELIST = "-Requested-Pending-Rejected-Paid-Completed-Problem-Canceled"); 
-
+	Index StatusIndex on Status [Type = bitmap];
+	
 	/// When a CurrencyOrder is update or deleted, record that the ATM Notes
 	Trigger UpdateDeleteNotes [Time = AFTER, Event = UPDATE/DELETE, Foreach = row/object]{
 			new changed, note, atm, st // ensure variables are private to trigger

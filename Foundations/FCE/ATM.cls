@@ -10,10 +10,47 @@ Class FCE.ATM Extends (%Persistent,%Library.Populate,%XML.Adaptor)
 	Index CBIndex on CurrencyBalances(KEYS);
 	property Note As %Stream.GlobalCharacter;
 	Relationship Branch As FCE.Branch [Cardinality = parent, Inverse = ATMs];
+	Relationship Orders As FCE.CurrencyOrder [Cardinality = many, Inverse = ATM];
+	
+	/// Show serial numbers and addresses for ATMs in a given city that have at least one currency
+	ClassMethod ATMsInACity(city As %String, state As %String) As %Status
+	{
+		&sql(declare ATMS cursor for 
+		select SerialNumber, Address->Street, list(ATM_Balance->element_key) as Currencies 
+	    from FCE.ATM 
+	    where (Address->City = :city AND Address->State = :state) 
+	    group by SerialNumber 
+	    having list(ATM_Balance->element_key) is not null)
+	    &sql(open ATMS)
+
+	    for {
+
+	    	&sql(fetch ATMS into :serial, :street, :currencies)
+
+	    	quit:(SQLCODE '= 0)
+
+	    	write !, serial, ?15, street, ?37, currencies
+
+	    }
+
+	    if SQLCODE = 100 {
+
+	    	write !!, %ROWCOUNT, " row(s) returned."
+
+	    	set status = $$$OK
+
+	    	}
+
+	    	else { set status = $$$ERROR($$$GeneralError, "SQLCODE: " _ SQLCODE _ " " _ %msg) }
+
+	    	&sql(close ATMS)
+
+	    	return $$$OK
+	}
+
 	
 	
 	///  Sum currency amounts and count ATMs, by currency
-
 	Query CurrencySummary(minimum = 0) As %SQLQuery [ SqlProc ]
 
 	{
@@ -29,8 +66,8 @@ Class FCE.ATM Extends (%Persistent,%Library.Populate,%XML.Adaptor)
 		order by element_key
 
  	}
+ 	
 	/// Return unique list of city/state combinations with ATMs
-
 	Query CitiesStates() As %SQLQuery [ SqlProc ]
 
 	{

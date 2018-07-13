@@ -52,6 +52,78 @@ Method fillrandom(){
 		set ..Zip = dataZip(indexZipRandom)
 		
 	}
+	
+	ClassMethod ByZip(state As %String = "", Output status As %Status) As %SQL.StatementResult [ ReturnResultsets, SqlProc ]
+	{
+
+		set resultSet = $$$NULLOREF
+
+		set statement = ##class(%SQL.Statement).%New()
+
+		set sql = "select zip, street, city, state from fce.realestate"
+
+		if (state '= "") {
+
+			set sql = sql _ " where state = ?"
+
+		}
+
+		set sql = sql _ " order by zip"
+
+		set status = statement.%Prepare(sql)
+
+		if $$$ISOK(status) {
+			if (state '= "") {
+
+				set resultSet = statement.%Execute(state)
+
+			}
+
+			else {
+
+				set resultSet = statement.%Execute()
+
+			}
+
+			if (resultSet.%SQLCODE = 0) {
+
+				// successful %Execute
+
+				//do resultSet.%Display()  // for testing
+
+				do %sqlcontext.AddResultSet(resultSet)  // for xDBC
+
+			}
+
+			else {
+
+				// error during %Execute
+
+				set %sqlcontext.%SQLCODE = resultSet.%SQLCODE
+
+				set %sqlcontext.%Message = resultSet.%Message
+
+			}
+
+		}
+
+		else {
+
+			// error during %Prepare: bad SQL
+
+			do $system.Status.DecomposeStatus(status, .err)
+
+			set %sqlcontext.%SQLCODE = err(1,"param",1)
+
+			set %sqlcontext.%Message = err(1,"param",2)
+
+		}
+
+		return resultSet  // return results to other server-side code
+
+	}
+
+	
 Storage Default
 {
 <Data name="RealEstateDefaultData">

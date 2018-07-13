@@ -39,6 +39,24 @@ Class FCE.CurrencyOrder Extends (%Persistent, %Populate, %XML.Adaptor)
 
 	Property Status As %String (VALUELIST = "-Requested-Pending-Rejected-Paid-Completed-Problem-Canceled"); 
 
+	/// When a CurrencyOrder is update or deleted, record that the ATM Notes
+	Trigger UpdateDeleteNotes [Time = AFTER, Event = UPDATE/DELETE, Foreach = row/object]{
+			new changed, note, atm, st // ensure variables are private to trigger
+			return:({ATM} = "")   // if this CurrencyOrder has no ATM, just exit
+			set changed = $case({%%OPERATION}, "DELETE":"deleted", "UPDATE":"updated")
+			set note = "At " _ $zdt($h) _ ", " _ $username _ " " _ changed _ " Order #"
+			_ {ID} _ " originally requested by " _ {Requestor}
+			_ " (for " _ {AmountOut} _ " " _ {CurrencyOut} _ ")"
+			
+			set atm = ##class(FCE.ATM).%OpenId({ATM}, 4, .st)
+			if $$$ISOK(st) {
+				do atm.Note.MoveToEnd()
+				do atm.Note.WriteLine(note)
+				
+				set st = atm.%Save()
+			}
+			if ($$$ISERR(st)) { set %msg = "Couldn't update ATM notes." }
+	}
 	///Display all orders in a given status, sorted by branch city
 	ClassMethod OrdersByCity(orderStatus As %String = "Pending"){
 		&sql(declare ATMS cursor for 

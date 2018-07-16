@@ -7,11 +7,11 @@ Class FCE.CurrencyOrder Extends (%Persistent, %Populate, %XML.Adaptor)
 
 	Property RequestorEmail As %String;
 
-	Property AmountOut As %Numeric(MINVAL = 0);
+	Property AmountOut As %Numeric(MINVAL = 0, MAXVAL = 100000);
 
 	Property CurrencyOut As FCE.CurrencyName;
 
-	Property AmountIn As %Numeric(MINVAL = 0);
+	Property AmountIn As %Numeric(MINVAL = 0, MAXVAL = 100000);
 
 	Property CurrencyIn As FCE.CurrencyName;
 
@@ -41,6 +41,16 @@ Class FCE.CurrencyOrder Extends (%Persistent, %Populate, %XML.Adaptor)
 	Property Status As %String (VALUELIST = "-Requested-Pending-Rejected-Paid-Completed-Problem-Canceled"); 
 	Index StatusIndex on Status [Type = bitmap];
 	
+	Method %OnNew(currencyOut As FCE.CurrencyName = "", amountOut As %Numeric = 0, currencyIn As FCE.CurrencyName = "", amountIn As %Numeric = 0, Output errorStatus As %Status) As %Status{
+		set ..CurrencyOut = currencyOut
+		set ..CurrencyIn = currencyIn
+		set ..AmountOut = amountOut
+		set ..AmountIn = amountIn
+		set ..Status = "Requested"
+		set ..Fee = 0
+		set errorStatus = ..%ValidateObject()
+		return errorStatus
+	}
 	/// When a CurrencyOrder is update or deleted, record that the ATM Notes
 	Trigger UpdateDeleteNotes [Time = AFTER, Event = UPDATE/DELETE, Foreach = row/object]{
 			new changed, note, atm, st // ensure variables are private to trigger

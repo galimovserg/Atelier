@@ -1,0 +1,5 @@
+ROUTINE Test
+test1
+ write "hello world1"
+ write "hello world2"
+ write "hello world3"
